@@ -1,0 +1,20 @@
+{
+  "apiVersion": 2,
+  "name": "blocks-course/team-members",
+  "title": "Team members",
+  "category": "media",
+  "keywords": [
+	"Team",
+	"Members",
+	"Grid"
+  ],
+  "icon": "admin-users",
+  "description": "Example block written with ESNext standard and JSX support – build step required.",
+  "supports": {
+	"html": false
+  },
+  "textdomain": "team-members",
+  "editorScript": "file:./build/index.js",
+  "editorStyle": "file:./build/index.css",
+  "style": "file:./build/style-index.css"
+}

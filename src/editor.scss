@@ -32,6 +32,19 @@
 					font-weight: 300;
 					margin-block: 5px;
 				}
+
+				.wp-block-blocks-course-team-member-img {
+					position: relative;
+
+					&.is-loading {
+						opacity: 0.5;
+					}
+
+					.components-spinner {
+						position: absolute;
+						inset: 0;
+					}
+				}
 			}
 		}
 	}

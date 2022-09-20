@@ -29,7 +29,7 @@
 	@for $i from 1 through 6 {
 		&.has-#{$i}-columns {
 			.wp-block-blocks-course-team-member {
-				width: calc(100% / #{$i});
+				width: calc(100% / #{$i} - 10px);
 			}
 		}
 	}

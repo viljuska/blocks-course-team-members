@@ -1,15 +1,29 @@
 import { registerBlockType } from '@wordpress/blocks';
-import { __ } from '@wordpress/i18n';
+import { __ }                from '@wordpress/i18n';
+import edit                  from './edit';
+import save                  from './save';
 
-registerBlockType('blocks-course/team-member', {
-	title: __('Team Member', 'team-members'),
-	description: __('Team Member desc', 'team-members'),
+registerBlockType( 'blocks-course/team-member', {
+	title: __( 'Team Member', 'team-members' ),
+	description: __( 'Team Member desc', 'team-members' ),
 	icon: 'admin-users',
-	parent: ['blocks-course/team-members'],
-	edit: () => {
-		return <p>edit</p>;
+	parent: [ 'blocks-course/team-members' ],
+	supports: {
+		reusable: false,
+		html: false
 	},
-	save: () => {
-		return <p>save</p>;
+	attributes: {
+		name: {
+			type: 'string',
+			source: 'html',
+			selector: 'h4'
+		},
+		bio: {
+			type: 'string',
+			source: 'html',
+			selector: 'p'
+		},
 	},
-});
+	edit,
+	save,
+} );

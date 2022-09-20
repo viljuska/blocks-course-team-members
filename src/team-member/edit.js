@@ -1,5 +1,5 @@
-import { useBlockProps, RichText } from '@wordpress/block-editor';
-import { __ }                      from '@wordpress/i18n';
+import { useBlockProps, RichText, MediaPlaceholder } from '@wordpress/block-editor';
+import { __ }                                        from '@wordpress/i18n';
 
 export default function edit( { attributes, setAttributes } ) {
 	const { name, bio } = attributes,
@@ -20,6 +20,14 @@ export default function edit( { attributes, setAttributes } ) {
 			onChange={ onChangeBio }
 			value={ bio }
 			allowedFormats={ [] }
+		/>
+		<MediaPlaceholder
+			icon="admin-users"
+			onSelect={ val => console.log( val ) }
+			onSelectUrl={ val => console.log( val ) }
+			onError={ err => console.error( err ) }
+			accept="image/*"
+			allowdTypes={ [ 'image' ] }
 		/>
 	</div>;
 }

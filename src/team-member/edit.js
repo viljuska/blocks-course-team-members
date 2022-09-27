@@ -37,20 +37,6 @@ function edit( { attributes, setAttributes, noticeOperations, noticeUI } ) {
 		};
 
 	return <div { ...useBlockProps() }>
-		<RichText
-			placeholder={ __( 'Member Name', 'team-member' ) }
-			tagName="h4"
-			onChange={ onChangeName }
-			value={ name }
-			allowedFormats={ [] }
-		/>
-		<RichText
-			placeholder={ __( 'Member Bio', 'team-member' ) }
-			tagName="p"
-			onChange={ onChangeBio }
-			value={ bio }
-			allowedFormats={ [] }
-		/>
 		{ url &&
 			<div className={ `wp-block-blocks-course-team-member-img ${ isBlobURL( url ) ? 'is-loading' : '' }` }>
 				<img src={ url } alt={ alt } />
@@ -66,6 +52,20 @@ function edit( { attributes, setAttributes, noticeOperations, noticeUI } ) {
 			accept="image/*"
 			allowdTypes={ [ 'image' ] }
 			disableMediaButtons={ url }
+		/>
+		<RichText
+			placeholder={ __( 'Member Name', 'team-member' ) }
+			tagName="h4"
+			onChange={ onChangeName }
+			value={ name }
+			allowedFormats={ [] }
+		/>
+		<RichText
+			placeholder={ __( 'Member Bio', 'team-member' ) }
+			tagName="p"
+			onChange={ onChangeBio }
+			value={ bio }
+			allowedFormats={ [] }
 		/>
 	</div>;
 }

@@ -1,9 +1,9 @@
 import { useBlockProps, RichText, MediaPlaceholder } from '@wordpress/block-editor';
 import { isBlobURL }                                 from '@wordpress/blob';
-import { Spinner }                                   from '@wordpress/components';
+import { Spinner, withNotices }                      from '@wordpress/components';
 import { __ }                                        from '@wordpress/i18n';
 
-export default function edit( { attributes, setAttributes } ) {
+function edit( { attributes, setAttributes, noticeOperations, noticeUI } ) {
 	const { name, bio, url, alt } = attributes,
 		onChangeName = newName => setAttributes( { name: newName } ),
 		onChangeBio = newBio => setAttributes( { bio: newBio } ),
@@ -23,6 +23,17 @@ export default function edit( { attributes, setAttributes } ) {
 				id: image.id,
 				alt: image.alt
 			} );
+		},
+		onSelectUrl = newUrl => {
+			setAttributes( {
+				url: newUrl,
+				id: undefined,
+				alt: ''
+			} );
+		},
+		onUploadError = message => {
+			noticeOperations.removeAllNotices();
+			noticeOperations.createErrorNotice( message );
 		};
 
 	return <div { ...useBlockProps() }>
@@ -44,17 +55,19 @@ export default function edit( { attributes, setAttributes } ) {
 			<div className={ `wp-block-blocks-course-team-member-img ${ isBlobURL( url ) ? 'is-loading' : '' }` }>
 				<img src={ url } alt={ alt } />
 				{ isBlobURL( url ) && <Spinner /> }
-				<Spinner />
 			</div>
 		}
 		<MediaPlaceholder
 			icon="admin-users"
 			onSelect={ onSelectImage }
-			onSelectUrl={ val => console.log( val ) }
-			onError={ err => console.error( err ) }
+			onSelectUrl={ onSelectUrl }
+			onError={ onUploadError }
+			notices={ noticeUI }
 			accept="image/*"
 			allowdTypes={ [ 'image' ] }
 			disableMediaButtons={ url }
 		/>
 	</div>;
 }
+
+export default withNotices( edit );

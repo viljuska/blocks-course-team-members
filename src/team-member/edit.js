@@ -1,8 +1,8 @@
-import { useEffect, useState }                       from '@wordpress/element';
-import { useBlockProps, RichText, MediaPlaceholder } from '@wordpress/block-editor';
-import { isBlobURL, revokeBlobURL }                  from '@wordpress/blob';
-import { Spinner, withNotices }                      from '@wordpress/components';
-import { __ }                                        from '@wordpress/i18n';
+import { useEffect, useState }                                                        from '@wordpress/element';
+import { useBlockProps, RichText, MediaPlaceholder, BlockControls, MediaReplaceFlow } from '@wordpress/block-editor';
+import { isBlobURL, revokeBlobURL }                                                   from '@wordpress/blob';
+import { Spinner, withNotices }                                                       from '@wordpress/components';
+import { __ }                                                                         from '@wordpress/i18n';
 
 function edit( { attributes, setAttributes, noticeOperations, noticeUI } ) {
 	const { name, bio, url, alt, id } = attributes,
@@ -61,38 +61,52 @@ function edit( { attributes, setAttributes, noticeOperations, noticeUI } ) {
 		}
 	}, [ url ] );
 
-	return <div { ...useBlockProps() }>
-		{ url &&
-			<div className={ `wp-block-blocks-course-team-member-img ${ isBlobURL( url ) ? 'is-loading' : '' }` }>
-				<img src={ url } alt={ alt } />
-				{ isBlobURL( url ) && <Spinner /> }
-			</div>
-		}
-		<MediaPlaceholder
-			icon="admin-users"
-			onSelect={ onSelectImage }
-			onSelectUrl={ onSelectUrl }
-			onError={ onUploadError }
-			notices={ noticeUI }
-			accept="image/*"
-			allowdTypes={ [ 'image' ] }
-			disableMediaButtons={ url }
-		/>
-		<RichText
-			placeholder={ __( 'Member Name', 'team-member' ) }
-			tagName="h4"
-			onChange={ onChangeName }
-			value={ name }
-			allowedFormats={ [] }
-		/>
-		<RichText
-			placeholder={ __( 'Member Bio', 'team-member' ) }
-			tagName="p"
-			onChange={ onChangeBio }
-			value={ bio }
-			allowedFormats={ [] }
-		/>
-	</div>;
+	return <>
+		<BlockControls group="inline">
+			<MediaReplaceFlow
+				name={ __( 'Replace Image', 'team-members' ) }
+				onSelect={ onSelectImage }
+				onSelectURL={ onSelectUrl }
+				onError={ onUploadError }
+				accept="image/*"
+				allowedTypes={ [ 'image' ] }
+				mediaId={ id }
+				mediaURL={ url }
+			/>
+		</BlockControls>
+		<div { ...useBlockProps() }>
+			{ url &&
+				<div className={ `wp-block-blocks-course-team-member-img ${ isBlobURL( url ) ? 'is-loading' : '' }` }>
+					<img src={ url } alt={ alt } />
+					{ isBlobURL( url ) && <Spinner /> }
+				</div>
+			}
+			<MediaPlaceholder
+				icon="admin-users"
+				onSelect={ onSelectImage }
+				onSelectUrl={ onSelectUrl }
+				onError={ onUploadError }
+				notices={ noticeUI }
+				accept="image/*"
+				allowdTypes={ [ 'image' ] }
+				disableMediaButtons={ url }
+			/>
+			<RichText
+				placeholder={ __( 'Member Name', 'team-member' ) }
+				tagName="h4"
+				onChange={ onChangeName }
+				value={ name }
+				allowedFormats={ [] }
+			/>
+			<RichText
+				placeholder={ __( 'Member Bio', 'team-member' ) }
+				tagName="p"
+				onChange={ onChangeBio }
+				value={ bio }
+				allowedFormats={ [] }
+			/>
+		</div>
+	</>;
 }
 
 export default withNotices( edit );

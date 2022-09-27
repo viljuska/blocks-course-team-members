@@ -1,10 +1,11 @@
+import { useEffect, useState }                       from '@wordpress/element';
 import { useBlockProps, RichText, MediaPlaceholder } from '@wordpress/block-editor';
-import { isBlobURL }                                 from '@wordpress/blob';
+import { isBlobURL, revokeBlobURL }                  from '@wordpress/blob';
 import { Spinner, withNotices }                      from '@wordpress/components';
 import { __ }                                        from '@wordpress/i18n';
 
 function edit( { attributes, setAttributes, noticeOperations, noticeUI } ) {
-	const { name, bio, url, alt } = attributes,
+	const { name, bio, url, alt, id } = attributes,
 		onChangeName = newName => setAttributes( { name: newName } ),
 		onChangeBio = newBio => setAttributes( { bio: newBio } ),
 		onSelectImage = image => {
@@ -34,7 +35,31 @@ function edit( { attributes, setAttributes, noticeOperations, noticeUI } ) {
 		onUploadError = message => {
 			noticeOperations.removeAllNotices();
 			noticeOperations.createErrorNotice( message );
-		};
+		},
+		[ blobURL, setBlobURL ] = useState();
+
+	// If user uploads image and quickly save and reloads page and the image is not uploaded,
+	// there is still a blob left, and if it's a blob we won't have our image.
+	// This runs only at page load, so if we have a blob it will be removed, and we can re-upload new image
+	useEffect( () => {
+		if ( !id && isBlobURL( url ) ) {
+			setAttributes( {
+				url: undefined,
+				id: undefined,
+				alt: ''
+			} );
+		}
+	}, [] );
+
+	// Free up memory by clearing blobURL after successful upload
+	useEffect( () => {
+		if ( isBlobURL( url ) ) {
+			setBlobURL( url );
+		} else {
+			revokeBlobURL( blobURL );
+			setBlobURL();
+		}
+	}, [ url ] );
 
 	return <div { ...useBlockProps() }>
 		{ url &&
